@@ -1,0 +1,101 @@
+
+CREATE TABLE public.themes
+(
+    theme_id integer NOT NULL,
+    theme character varying(50) COLLATE pg_catalog."default",
+    CONSTRAINT themes_pkey PRIMARY KEY (theme_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.themes
+    OWNER to postgres;
+
+
+CREATE TABLE public.images
+(
+    image_id integer NOT NULL,
+    path character varying(50) COLLATE pg_catalog."default",
+    price integer,
+    CONSTRAINT images_pkey PRIMARY KEY (image_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.images
+    OWNER to postgres;
+
+
+CREATE TABLE public.clients
+(
+    client_id integer NOT NULL,
+    name character varying(50) COLLATE pg_catalog."default",
+    lastname character varying(50) COLLATE pg_catalog."default",
+    email character varying(50) COLLATE pg_catalog."default",
+    CONSTRAINT clients_pkey PRIMARY KEY (client_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.clients
+    OWNER to postgres;
+
+CREATE TABLE public.orders
+(
+    order_id integer NOT NULL,
+    order_date date,
+    order_time time without time zone,
+    CONSTRAINT orders_pkey PRIMARY KEY (order_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.orders
+    OWNER to postgres;
+
+
+CREATE TABLE public.order_image
+(
+    order_image_id integer NOT NULL,
+    "order" integer,
+    image integer,
+    CONSTRAINT order_image_pkey PRIMARY KEY (order_image_id),
+    CONSTRAINT image FOREIGN KEY (image)
+        REFERENCES public.images (image_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "order" FOREIGN KEY ("order")
+        REFERENCES public.orders (order_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.order_image
+    OWNER to postgres;
+
+CREATE TABLE public.image_theme
+(
+    image_theme_id integer NOT NULL,
+    image integer,
+    theme integer,
+    CONSTRAINT image_theme_pkey PRIMARY KEY (image_theme_id),
+    CONSTRAINT image FOREIGN KEY (image)
+        REFERENCES public.images (image_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT theme FOREIGN KEY (theme)
+        REFERENCES public.themes (theme_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.image_theme
+    OWNER to postgres;
