@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="common/header :: common-header" />
+
+<body>
+	<div th:replace="common/header :: navbar" />
+	
+	
+	<div class="container">
+		<div class="row">
+			<form class="form-horizontal" th:action="@{/image/add}" method="post"
+				enctype="multipart/form-data">
+				<fieldset>
+					<legend class="center-block">
+						New Image Information<span style="font-size: small"> * is a
+							required field</span>
+					</legend>
+		
+			
+			
+			<!-- name -->
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="name">* Name</label>
+
+						<div class="col-md-8">
+							<input type="text" name="name" class="form-control" id="title"
+								th:value="${image.name}" required="required" placeholder="Title" />
+							<span class="help-block">Name of the image</span>
+						</div>
+					</div>
+
+					<!-- author -->
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="author">*
+							Author</label>
+						<div class="col-md-8">
+							<input type="text" name="author" class="form-control" id="author"
+								th:value="${image.author}" required="required"
+								placeholder="Author" /> <span class="help-block">Author
+								of the image</span>
+						</div>
+					</div>
+
+					
+
+					<!-- publication date -->
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="publicationDate">Publication
+							Date</label>
+						<div class="col-md-8">
+							<input type="date" class="form-control" id="publicationDate"
+								name="publicationDate" th:value="${image.publicationDate}"
+								placeholder="ublication Date" /> <span class="help-block">Publication
+								Date of the image</span>
+						</div>
+					</div>
+
+					
+					<!-- category -->
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="category">*
+							Category</label>
+						<div class="col-md-8">
+							<select th:value="${image.category}" id="category" name="category"
+								class="form-control">
+								<option value="" selected="selected" disabled="disabled">Please
+									select an option...</option>
+								<option value="Nature"
+									th:selected="(${image.category}=='Nature')">Nature</option>
+								<option value="Animals"
+									th:selected="(${image.category}=='Animals')">Animals</option>
+								<option value="Ocean"
+									th:selected="(${image.category}=='Ocean')">Ocean</option>
+								
+							</select>
+						</div>
+					</div>
+
+					
+
+					<!-- list price -->
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="listPrice">List
+							Price</label>
+						<div class="col-md-8">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input
+									th:value="${image.listPrice}" type="number" name="listPrice"
+									class="form-control" id="listPrice" placeholder="List Price" />
+							</div>
+							<span class="help-block">List price of the image</span>
+						</div>
+					</div>
+
+					<!-- our price -->
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="ourPrice">Our
+							Price</label>
+						<div class="col-md-8">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input
+									th:value="${image.ourPrice}" type="number" name="ourPrice"
+									class="form-control" id="ourPrice" placeholder="Our Price" />
+							</div>
+							<span class="help-block">Our price of the image</span>
+						</div>
+					</div>
+
+					<!-- in stock number -->
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="inStockNumber">Number
+							in stock</label>
+						<div class="col-md-8">
+							<input th:value="${image.inStockNumber}" type="number"
+								name="inStockNumber" class="form-control" id="inStockNumber"
+								placeholder="Number of in-stock copies" /> <span
+								class="help-block">Number of in-stock copies</span>
+						</div>
+					</div>
+
+					<!-- status of image -->
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="status">Status</label>
+						<div class="col-md-8">
+							<label><input value="true" type="radio" name="active"
+								checked="checked" /> Active </label> <label><input
+								value="false" type="radio" name="active" />
+								Inactive </label> <span class="help-block">Whether the image is
+								active or inactive</span>
+						</div>
+					</div>
+
+					
+
+					<!-- upload image -->
+					<div class="form-group">
+						<div class="col-md-2">
+							<label for="imageImage">Upload image</label>
+						</div>
+						<div class="col-md-8">
+							<input id="imageImage" type="file" name="imageImage"
+								th:value="${image.imageImage}" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-md-2"></div>
+						<div class="col-md-8">
+							<button type="submit" class="btn btn-success">Add Image</button>
+							<a class="btn btn-danger" th:href="@{/}">Cancel</a>
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+	
+
+	<div th:replace="common/header :: body-bottom-scripts" />
+</body>
+</html>
