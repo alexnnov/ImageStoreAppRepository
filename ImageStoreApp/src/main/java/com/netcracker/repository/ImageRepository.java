@@ -1,7 +1,9 @@
-package com.netcracker.repository;
+package com.imagestore.repository;
 
-import com.netcracker.entity.Image;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface ImageRepository extends JpaRepository<Image,Integer> {
+import com.imagestore.domain.Image;
+
+public interface ImageRepository extends CrudRepository<Image,Long>{
+
 }

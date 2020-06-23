@@ -1,13 +1,19 @@
 package com.imagestore.controller;
 
+import java.security.Principal;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,13 +24,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 
+
+import com.imagestore.domain.Image;
 import com.imagestore.domain.User;
 import com.imagestore.domain.security.PasswordResetToken;
 import com.imagestore.domain.security.Role;
 import com.imagestore.domain.security.UserRole;
+import com.imagestore.service.ImageService;
 import com.imagestore.service.UserService;
 import com.imagestore.service.impl.UserSecurityService;
 import com.imagestore.utility.MailConstructor;
@@ -44,6 +51,9 @@ public class HomeController {
 	
 	@Autowired
 	private UserSecurityService userSecurityService;
+	
+	@Autowired
+	private ImageService imageService;
 
 	@RequestMapping("/")
 	public String index() {
@@ -54,6 +64,36 @@ public class HomeController {
 	public String login(Model model) {
 		model.addAttribute("classActiveLogin", true);
 		return "myAccount";
+	}
+	
+	@RequestMapping("/imageboard")
+	public String imageBoard(Model model) {
+		List<Image> imageList = imageService.findAll();
+		model.addAttribute("imageList",imageList);
+		
+		return "imageboard";
+	}
+	
+	@RequestMapping("/imageDetail")
+	public String imageDetail(
+			@PathParam("id") Long id, Model model, Principal principal
+			) {
+		if(principal != null) {
+			String username = principal.getName();
+			User user = userService.findByUsername(username);
+			model.addAttribute("user", user);
+		}
+		
+		Image image = imageService.findById(id);
+		
+		model.addAttribute("image", image);
+		
+		List<Integer> qtyList = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
+		
+		model.addAttribute("qtyList", qtyList);
+		model.addAttribute("qty", 1);
+		
+		return "imageDetail";
 	}
 
 	@RequestMapping("/forgetPassword")

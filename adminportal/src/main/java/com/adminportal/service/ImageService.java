@@ -11,5 +11,7 @@ public interface ImageService {
 	
 	List<Image> findAll();
 	
+	Image findById(Long id);
+	
 
 }
