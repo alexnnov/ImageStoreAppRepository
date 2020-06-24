@@ -1,5 +1,6 @@
 package com.imagestore.service.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -8,11 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.imagestore.domain.User;
+import com.imagestore.domain.UserBilling;
+import com.imagestore.domain.UserPayment;
+import com.imagestore.domain.UserShipping;
 import com.imagestore.domain.security.PasswordResetToken;
 import com.imagestore.domain.security.UserRole;
 import com.imagestore.repository.PasswordResetTokenRepository;
 import com.imagestore.repository.RoleRepository;
+import com.imagestore.repository.UserPaymentRepository;
 import com.imagestore.repository.UserRepository;
+import com.imagestore.repository.UserShippingRepository;
 import com.imagestore.service.UserService;
 
 @Service
@@ -28,6 +34,12 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private RoleRepository roleRepository;
+	
+	@Autowired
+	private UserPaymentRepository userPaymentRepository;
+	
+	@Autowired
+	private UserShippingRepository userShippingRepository;
 	
 	@Override
 	public PasswordResetToken getPasswordResetToken(final String token) {
@@ -70,6 +82,56 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User save(User user) {
 		return userRepository.save(user);
+	}
+	
+	@Override
+	public void updateUserBilling(UserBilling userBilling, UserPayment userPayment, User user) {
+		userPayment.setUser(user);
+		userPayment.setUserBilling(userBilling);
+		userPayment.setDefaultPayment(true);
+		userBilling.setUserPayment(userPayment);
+		user.getUserPaymentList().add(userPayment);
+		save(user);
+	}
+	
+	@Override
+	public void updateUserShipping(UserShipping userShipping, User user){
+		userShipping.setUser(user);
+		userShipping.setUserShippingDefault(true);
+		user.getUserShippingList().add(userShipping);
+		save(user);
+	}
+	
+	
+	
+	@Override
+	public void setUserDefaultPayment(Long userPaymentId, User user) {
+		List<UserPayment> userPaymentList = (List<UserPayment>) userPaymentRepository.findAll();
+		
+		for (UserPayment userPayment : userPaymentList) {
+			if(userPayment.getId() == userPaymentId) {
+				userPayment.setDefaultPayment(true);
+				userPaymentRepository.save(userPayment);
+			} else {
+				userPayment.setDefaultPayment(false);
+				userPaymentRepository.save(userPayment);
+			}
+		}
+	}
+	
+	@Override
+	public void setUserDefaultShipping(Long userShippingId, User user) {
+		List<UserShipping> userShippingList = (List<UserShipping>) userShippingRepository.findAll();
+		
+		for (UserShipping userShipping : userShippingList) {
+			if(userShipping.getId() == userShippingId) {
+				userShipping.setUserShippingDefault(true);
+				userShippingRepository.save(userShipping);
+			} else {
+				userShipping.setUserShippingDefault(false);
+				userShippingRepository.save(userShipping);
+			}
+		}
 	}
 
 }
