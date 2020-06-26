@@ -61,7 +61,7 @@
     								</div>
     								<div class="col-xs-6">
     									<h4 th:if="*{image.inStockNumber&gt;10}" style="color: green">In Stock</h4>
-    									<h4 th:if="*{image.inStockNumber&lt;10 and image.inStockNumber&gt;0}" style="color: green">Only <span th:text="${image.inStockNumber}"> In Stock</span></h4>
+    									<h4 th:if="*{image.inStockNumber&lt;10 and image.inStockNumber&gt;0}" style="color: green">Only <span th:text="${image.inStockNumber}"> </span> In Stock</h4>
     									<h4 th:if="*{image.inStockNumber==0}" style="color:darkred;">Unavailable</h4>
     									<button type="submit" class="btn btn-warning" style="color:black;border:1px solid black; padding: 10px 40px 10px 40px;">Add to Cart</button>
     								</div>

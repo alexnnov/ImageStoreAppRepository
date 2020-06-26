@@ -1,5 +1,6 @@
 package com.imagestore.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -7,7 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.imagestore.domain.ShoppingCart;
 import com.imagestore.domain.User;
 import com.imagestore.domain.UserBilling;
 import com.imagestore.domain.UserPayment;
@@ -30,9 +33,6 @@ public class UserServiceImpl implements UserService{
 	private UserRepository userRepository;
 	
 	@Autowired
-	private PasswordResetTokenRepository passwordResetTokenRepository;
-	
-	@Autowired
 	private RoleRepository roleRepository;
 	
 	@Autowired
@@ -40,6 +40,9 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private UserShippingRepository userShippingRepository;
+	
+	@Autowired
+	private PasswordResetTokenRepository passwordResetTokenRepository;
 	
 	@Override
 	public PasswordResetToken getPasswordResetToken(final String token) {
@@ -57,21 +60,31 @@ public class UserServiceImpl implements UserService{
 		return userRepository.findByUsername(username);
 	}
 	
+	@Override
 	public User findByEmail (String email) {
 		return userRepository.findByEmail(email);
 	}
 	
-	public User createUser(User user, Set<UserRole> userRoles) throws Exception{
+	@Override
+	
+	public User createUser(User user, Set<UserRole> userRoles){
 		User localUser = userRepository.findByUsername(user.getUsername());
 		
 		if(localUser != null) {
-			LOG.info("user {} already exists. ", user.getUsername());
+			LOG.info("user {} already exists. Nothing will be done.", user.getUsername());
 		} else {
 			for (UserRole ur : userRoles) {
 				roleRepository.save(ur.getRole());
 			}
 			
 			user.getUserRoles().addAll(userRoles);
+			
+			ShoppingCart shoppingCart = new ShoppingCart();
+			shoppingCart.setUser(user);
+			user.setShoppingCart(shoppingCart);
+			
+			user.setUserShippingList(new ArrayList<UserShipping>());
+			user.setUserPaymentList(new ArrayList<UserPayment>());
 			
 			localUser = userRepository.save(user);
 		}
@@ -101,8 +114,6 @@ public class UserServiceImpl implements UserService{
 		user.getUserShippingList().add(userShipping);
 		save(user);
 	}
-	
-	
 	
 	@Override
 	public void setUserDefaultPayment(Long userPaymentId, User user) {

@@ -1,13 +1,17 @@
 package com.adminportal.domain;
 
-import javax.persistence.Column;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Image {
@@ -26,6 +30,10 @@ public class Image {
 	
 	@Transient
 	private MultipartFile imageImage;
+	
+	@OneToMany(mappedBy = "image")
+	@JsonIgnore
+	private List<ImageToCartItem>imageToCartItemList;
 
 	public Long getId() {
 		return id;
@@ -108,6 +116,14 @@ public class Image {
 
 	public void setImageImage(MultipartFile imageImage) {
 		this.imageImage = imageImage;
+	}
+	
+	public List<ImageToCartItem> getImageToCartItemList() {
+		return imageToCartItemList;
+	}
+
+	public void setImageToCartItemList(List<ImageToCartItem> imageToCartItemList) {
+		this.imageToCartItemList = imageToCartItemList;
 	}
 
 	
