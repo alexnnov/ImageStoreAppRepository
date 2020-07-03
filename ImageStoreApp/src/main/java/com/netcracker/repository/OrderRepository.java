@@ -1,7 +1,9 @@
-package com.netcracker.repository;
+package com.imagestore.repository;
 
-import com.netcracker.entity.Order;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface OrderRepository  extends JpaRepository<Order,Integer> {
+import com.imagestore.domain.Order;
+
+public interface OrderRepository extends CrudRepository<Order, Long>{
+
 }

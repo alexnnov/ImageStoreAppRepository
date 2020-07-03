@@ -17,9 +17,19 @@
 			</div>
 			
 		</div>
+		
 		<hr style="position:absolute; width:100%; height:6px; background-color: #4682B4; z-index:-1; margin-top:90px;" />
+		
 		<div class="row" style="margin-top: 120px;">
-			<div class="col-xs-9 col-xs-offset-3">
+			<div class="col-xs-9">
+			
+			<h3><label for="category">Category</label></h3>
+				<div class="list-group" id="category">
+					<a th:href="@{/imageboard(category='all')}" th:classappend="${activeAll}? 'active'" class="list-group-item">All</a>
+					<a th:href="@{/searchByCategory(category='Animals')}" th:classappend="${activeAnimals}? 'active'" class="list-group-item">Animals</a>
+					<a th:href="@{/searchByCategory(category='Nature')}" th:classappend="${activeNature}? 'active'" class="list-group-item">Nature</a>
+					<a th:href="@{/searchByCategory(category='Ocean')}" th:classappend="${activeOcean}? 'active'" class="list-group-item">Ocean</a>
+				</div>
 			
 			
 			
@@ -34,7 +44,7 @@
 				<tr class="image-item" data-th-each="image : ${imageList}">
 					<td>
 						<div th:if="${image != null}">
-							<div class="row">
+							<div class="row" style="margin-bottom: 50px;">
 								<div class="col-xs-3">
 									<a th:href="@{/imageDetail?id=}+${image.id}"><img class="img-responsive board-image" th:src="#{adminPath}+@{/image/image/}+${image.id}+'.png'"/></a>
 								</div>
@@ -73,5 +83,7 @@
 
 
 	<div th:replace="common/header :: body-bottom-scripts" />
+	
+	
 </body>
 </html>

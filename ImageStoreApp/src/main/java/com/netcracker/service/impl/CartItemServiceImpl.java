@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.imagestore.domain.CartItem;
 import com.imagestore.domain.Image;
 import com.imagestore.domain.ImageToCartItem;
+import com.imagestore.domain.Order;
 import com.imagestore.domain.ShoppingCart;
 import com.imagestore.domain.User;
 import com.imagestore.repository.CartItemRepository;
@@ -75,6 +76,14 @@ public class CartItemServiceImpl implements CartItemService{
 	public void removeCartItem(CartItem cartItem) {
 		imageToCartItemRepository.deleteByCartItem(cartItem);
 		cartItemRepository.delete(cartItem);
+	}
+	
+	public CartItem save(CartItem cartItem) {
+		return cartItemRepository.save(cartItem);
+	}
+	
+	public List<CartItem> findByOrder(Order order) {
+		return cartItemRepository.findByOrder(order);
 	}
 
 

@@ -17,6 +17,9 @@
 
 <link th:href="@{/css/fontawesome.min.css}" rel="stylesheet" />
 
+<link th:href="@{/css/jquery.dataTables.min.css}" rel="stylesheet" />
+<link th:href="@{/css/dataTables.bootstrap.min.css}" rel="stylesheet" />
+
 
 
 
@@ -26,12 +29,12 @@
 <body>
 	<div th:fragment="navbar">
 		<div class="page-top"
-			style="width: 100%; height: 50px; background-color: #4682B4;"></div>
+			style="width: 100%; height: 20px; background-color: #4682B4;"></div>
 		<!-- Static navbar -->
 		<nav class="navbar navbar-default navbar-inverse">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<a class="navbar-brand" href="#">IMAGE STORE</a>
+					<a class="navbar-brand" th:href="@{/}">IMAGE STORE</a>
 				</div>
 				<div id="navbar">
 				
@@ -41,12 +44,13 @@
 							aria-expanded="false">IMAGES <span class="caret"></span></a>
 							<ul class="dropdown-menu">
 								<li><a th:href="@{/imageboard}">Browse images</a></li>
-								<li><a href="#">Contacts &#38; info</a></li>
-								<li><a href="#">FAQ</a></li>
+								<li><a th:href="@{/coordinates}">Contacts &#38; info</a></li>
+								<li><a th:href="@{/faq}">FAQ</a></li>
 
 							</ul></li>
+							
 						<li>
-						<form class="navbar-form">
+						<form class="navbar-form" th:action="@{/searchImage}" method="post">
 							<div class="form-group">
 								<input type="text" name="keyword" class="form-control"
 									placeholder="Search image" />
@@ -56,7 +60,7 @@
 						</li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
-						<li><a th:href="@{/shoppingCart/cart}">SHOPPING CART</a></li>
+						<li><a sec:authorize="isAuthenticated()" th:href="@{/shoppingCart/cart}">SHOPPING CART</a></li>
 						<li><a sec:authorize="isAnonymous()" th:href="@{/login}">MY ACCOUNT</a></li>
 						<li><a sec:authorize="isAuthenticated()" th:href="@{/myProfile}">MY ACCOUNT</a></li>
 						<li><a sec:authorize="isAuthenticated()" th:href="@{/logout}">LOGOUT</a></li>
@@ -78,6 +82,8 @@
 	
 	<script th:src="@{/js/jquery.dataTables.min.js}"></script>
 		<script th:src="@{/js/dataTables.bootstrap.min.js}"></script>
+		
+		
 		
 	
 	</div>

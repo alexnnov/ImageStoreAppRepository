@@ -116,6 +116,11 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	@Override
+	public User findById(Long id){
+		return userRepository.findById(id).orElse(null);
+	}
+	
+	@Override
 	public void setUserDefaultPayment(Long userPaymentId, User user) {
 		List<UserPayment> userPaymentList = (List<UserPayment>) userPaymentRepository.findAll();
 		

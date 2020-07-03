@@ -1,5 +1,6 @@
 package com.imagestore.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,48 @@ public class ImageServiceImpl  implements ImageService{
 	private ImageRepository imageRepository;
 	
 	public List<Image> findAll(){
-		return (List<Image>) imageRepository.findAll();
+		List<Image> imageList = (List<Image>) imageRepository.findAll();
+		List<Image> activeImageList = new ArrayList<>();
+		
+		for (Image image: imageList) {
+			if(image.isActive()) {
+				activeImageList.add(image);
+			}
+		}
+		
+		return activeImageList;
 	}
 	
 	public Image findById(Long id) {
 		return imageRepository.findById(id).orElse(null);
 	
+	}
+	
+	public List<Image> findByCategory(String category){
+		List<Image> imageList = imageRepository.findByCategory(category);
+		
+		List<Image> activeImageList = new ArrayList<>();
+		
+		for (Image image: imageList) {
+			if(image.isActive()) {
+				activeImageList.add(image);
+			}
+		}
+		
+		return activeImageList;
+	}
+	
+	public List<Image> blurrySearch(String name) {
+		List<Image> imageList = imageRepository.findByNameContaining(name);
+		List<Image> activeImageList = new ArrayList<>();
+		
+		for (Image image: imageList) {
+			if(image.isActive()) {
+				activeImageList.add(image);
+			}
+		}
+		
+		return activeImageList;
 	}
 
 }

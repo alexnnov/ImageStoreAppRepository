@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.imagestore.domain.CartItem;
 import com.imagestore.domain.Image;
+import com.imagestore.domain.Order;
 import com.imagestore.domain.ShoppingCart;
 import com.imagestore.domain.User;
 
@@ -17,4 +18,10 @@ public interface CartItemService {
 CartItem findById(Long id);
 	
 	void removeCartItem(CartItem cartItem);
+	
+	CartItem save(CartItem cartItem);
+	
+	List<CartItem> findByOrder(Order order);
 }
+
+

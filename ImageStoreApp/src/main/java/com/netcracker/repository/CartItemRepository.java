@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.imagestore.domain.CartItem;
+import com.imagestore.domain.Order;
 import com.imagestore.domain.ShoppingCart;
 
 
@@ -13,4 +14,6 @@ import com.imagestore.domain.ShoppingCart;
 public interface CartItemRepository extends CrudRepository<CartItem, Long>{
 	
 	List<CartItem> findByShoppingCart(ShoppingCart shoppingCart);
+	
+	List<CartItem> findByOrder(Order order);
 }
