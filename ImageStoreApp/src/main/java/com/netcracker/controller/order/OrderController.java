@@ -1,4 +1,4 @@
-package com.imagestore.controller;
+package com.imagestore.controller.order;
 
 import java.security.Principal;
 import java.util.Collections;
@@ -17,22 +17,29 @@ import com.imagestore.domain.UserShipping;
 import com.imagestore.service.CartItemService;
 import com.imagestore.service.OrderService;
 import com.imagestore.service.UserService;
-import com.imagestore.service.UserShippingService;
 import com.imagestore.utility.USConstants;
 
 
-
 @Controller
-public class OrderDetailController {
+public class OrderController {
+	
 	@Autowired
 	private UserService userService;
-	@Autowired
-	private CartItemService cartItemService;
-	
-	
 	
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private CartItemService cartItemService;
+	
+	/**
+	 * processes request from myProfile template to display order details
+	 * 
+	 * @param orderId   user-chosen order's Id
+	 * @param principal current Spring Security user
+	 * @param model     the input model from the view
+	 * @return          view name myProfile to display
+	 */
 	@RequestMapping("/orderDetail")
 	public String orderDetail(
 			@RequestParam("id") Long orderId,
@@ -56,7 +63,7 @@ public class OrderDetailController {
 			UserShipping userShipping = new UserShipping();
 			model.addAttribute("userShipping", userShipping);
 			
-			List<String> stateList = USConstants.listOfUSStatesCode;
+			List<String> stateList = USConstants.listOfUSStatesCode;;
 			Collections.sort(stateList);
 			model.addAttribute("stateList", stateList);
 			

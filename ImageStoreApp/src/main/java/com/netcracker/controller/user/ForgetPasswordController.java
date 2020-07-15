@@ -1,4 +1,4 @@
-package com.imagestore.controller;
+package com.imagestore.controller.user;
 
 import java.util.UUID;
 
@@ -7,32 +7,39 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.imagestore.domain.User;
-import com.imagestore.service.ImageService;
 import com.imagestore.service.UserService;
 import com.imagestore.utility.MailConstructor;
 import com.imagestore.utility.SecurityUtility;
 
 
-@Controller
+@Service
 public class ForgetPasswordController {
-	@Autowired
-	private UserService userService;
+	
 	@Autowired
 	private JavaMailSender mailSender;
 	
 	@Autowired
 	private MailConstructor mailConstructor;
+
+	@Autowired
+	private UserService userService;
 	
-	
-	
-	
-	@RequestMapping("/forgetPassword")
+	/**
+	 * processes forgetPassword request from the myAccount template
+	 * 
+	 * @param request HTTP-servlet request
+	 * @param email   user-filled email address from template
+	 * @param model   the input model from the view
+	 * @return        view name myAccount to display
+	 */
+	@RequestMapping(value = "/forgetPassword", method = RequestMethod.POST)
 	public String forgetPassword(
 			HttpServletRequest request,
 			@ModelAttribute("email") String email,

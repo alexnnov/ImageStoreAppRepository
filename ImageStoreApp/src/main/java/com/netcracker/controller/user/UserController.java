@@ -1,4 +1,4 @@
-package com.imagestore.controller;
+package com.imagestore.controller.user;
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -32,17 +32,31 @@ import com.imagestore.utility.MailConstructor;
 import com.imagestore.utility.SecurityUtility;
 
 @Controller
-public class NewUserController {
-	@Autowired
-	private UserSecurityService userSecurityService;
+public class UserController {
+	
 	@Autowired
 	private JavaMailSender mailSender;
 	
 	@Autowired
 	private MailConstructor mailConstructor;
+
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private UserSecurityService userSecurityService;
+	
+	
+	/**
+	 * processes request from myAccount template for adding new user basing on email and username information
+	 * 
+	 * @param request    HTTP-servlet request
+	 * @param userEmail  current session user's email
+	 * @param username   current session username
+	 * @param model      the input model from the view
+	 * @return           view name myAccount to display
+	 * @throws Exception 
+	 */
 	@RequestMapping(value="/newUser", method = RequestMethod.POST)
 	public String newUserPost(
 			HttpServletRequest request,
@@ -61,7 +75,7 @@ public class NewUserController {
 		}
 		
 		if (userService.findByEmail(userEmail) != null) {
-			model.addAttribute("email", true);
+			model.addAttribute("emailExists", true);
 			
 			return "myAccount";
 		}
@@ -97,7 +111,14 @@ public class NewUserController {
 		return "myAccount";
 	}
 	
-
+	/**
+	 * forms myAccount template basing on session's locale and password reset token 
+	 * 
+	 * @param locale current session's locale information
+	 * @param token  current session's password reset token
+	 * @param model  the input model from the view
+	 * @return       view name myProfile to display
+	 */
 	@RequestMapping("/newUser")
 	public String newUser(Locale locale, @RequestParam("token") String token, Model model) {
 		PasswordResetToken passToken = userService.getPasswordResetToken(token);
@@ -121,11 +142,18 @@ public class NewUserController {
 		model.addAttribute("user", user);
 
 		model.addAttribute("classActiveEdit", true);
-		
 		return "myProfile";
 	}
 	
-	
+	/**
+	 * processes request from myProfile template basing on user and new password to update to update uset information
+	 * 
+	 * @param user        current session user
+	 * @param newPassword String filled by user from template
+	 * @param model       the input model from the view
+	 * @return            view name myProfile to display
+	 * @throws Exception
+	 */
 	@RequestMapping(value="/updateUserInfo", method=RequestMethod.POST)
 	public String updateUserInfo(
 			@ModelAttribute("user") User user,
@@ -138,7 +166,7 @@ public class NewUserController {
 			throw new Exception ("User not found");
 		}
 		
-		/*check email already exists*/
+		
 		if (userService.findByEmail(user.getEmail())!=null) {
 			if(userService.findByEmail(user.getEmail()).getId() != currentUser.getId()) {
 				model.addAttribute("emailExists", true);
@@ -146,15 +174,16 @@ public class NewUserController {
 			}
 		}
 		
-		/*check username already exists*/
+		
 		if (userService.findByUsername(user.getUsername())!=null) {
 			if(userService.findByUsername(user.getUsername()).getId() != currentUser.getId()) {
 				model.addAttribute("usernameExists", true);
+				
 				return "myProfile";
 			}
 		}
 		
-//		update password
+
 		if (newPassword != null && !newPassword.isEmpty() && !newPassword.equals("")){
 			BCryptPasswordEncoder passwordEncoder = SecurityUtility.passwordEncoder();
 			String dbPassword = currentUser.getPassword();
@@ -178,8 +207,9 @@ public class NewUserController {
 		model.addAttribute("user", currentUser);
 		model.addAttribute("classActiveEdit", true);
 		
-		model.addAttribute("listOfShippingAddresses", true);
-		model.addAttribute("listOfCreditCards", true);
+		model.addAttribute("listOfShippingAddresses",true);
+		model.addAttribute("listOfCreditCards",true);
+
 		
 		UserDetails userDetails = userSecurityService.loadUserByUsername(currentUser.getUsername());
 

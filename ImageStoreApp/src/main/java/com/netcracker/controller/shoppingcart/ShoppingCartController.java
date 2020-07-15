@@ -1,4 +1,4 @@
-package com.imagestore.controller;
+package com.imagestore.controller.shoppingcart;
 
 import java.security.Principal;
 import java.util.List;
@@ -35,6 +35,13 @@ public class ShoppingCartController {
 	@Autowired
 	private ImageService imageService;
 	
+	/**
+	 * forms shoppingCart template processing GET-method request from the header template
+	 * 
+	 * @param model     the input model from the view
+	 * @param principal current Spring Security user
+	 * @return          view name shoppingCart to display
+	 */
 	@RequestMapping("/cart")
 	public String shoppingCart(Model model, Principal principal) {
 		User user = userService.findByUsername(principal.getName());
@@ -50,6 +57,15 @@ public class ShoppingCartController {
 		return "shoppingCart";
 	}
 	
+	/**
+	 * processes request from imageDetail template basing on image and quantity information to add image to shopping cart
+	 * 
+	 * @param image     user-chosen image to add to shopping cart
+	 * @param qty       number of images in stock
+	 * @param model     the input model from the view 
+	 * @param principal current Spring security user
+	 * @return          view imagedetail for chosen image
+	 */
 	@RequestMapping("/addItem")
 	public String addItem(
 			@ModelAttribute("image") Image image,
@@ -70,6 +86,13 @@ public class ShoppingCartController {
 		return "forward:/imageDetail?id="+image.getId();
 	}
 	
+	/**
+	 * processes request from shoppingCart template basing on cart item and quantity information to update information
+	 *  
+	 * @param cartItemId user-chosen cart item Id to update
+	 * @param qty        number of selected items in cart
+	 * @return           view name shoppingCart for updated user's cart
+	 */
 	@RequestMapping("/updateCartItem")
 	public String updateShoppingCart(
 			@ModelAttribute("id") Long cartItemId,
@@ -82,6 +105,12 @@ public class ShoppingCartController {
 		return "forward:/shoppingCart/cart";
 	}
 	
+	/**
+	 * processes request from shoppingCart template to delete item in shopping cart
+	 *  
+	 * @param id  user-chosen cart item Id to delete
+	 * @return    view name shoppingCart for updated user's cart
+	 */
 	@RequestMapping("/removeItem")
 	public String removeItem(@RequestParam("id") Long id) {
 		cartItemService.removeCartItem(cartItemService.findById(id));

@@ -1,4 +1,4 @@
-package com.imagestore.controller;
+package com.imagestore.controller.search;
 
 import java.security.Principal;
 import java.util.List;
@@ -23,6 +23,14 @@ public class SearchController {
 	@Autowired
 	private ImageService imageService;
 
+	/**
+	 * forms imageboard template basing on user-chosen category 
+	 * 
+	 * @param category  String containing name of chosen by user category from the list 
+	 * @param model     the input model from the view
+	 * @param principal Spring Security user
+	 * @return          view name imageboard to display
+	 */
 	@RequestMapping("/searchByCategory")
 	public String searchByCategory(
 			@RequestParam("category") String category,
@@ -51,26 +59,6 @@ public class SearchController {
 		return "imageboard";
 	}
 	
-	@RequestMapping("/searchImage")
-	public String searchImage(
-			@ModelAttribute("keyword") String keyword,
-			Principal principal, Model model
-			) {
-		if(principal!=null) {
-			String username = principal.getName();
-			User user = userService.findByUsername(username);
-			model.addAttribute("user", user);
-		}
-		
-		List<Image> imageList = imageService.blurrySearch(keyword);
-		
-		if (imageList.isEmpty()) {
-			model.addAttribute("emptyList", true);
-			return "imageboard";
-		}
-		
-		model.addAttribute("imageList", imageList);
-		
-		return "imageboard";
-	}
+	
+	
 }

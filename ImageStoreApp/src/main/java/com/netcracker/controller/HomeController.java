@@ -61,35 +61,28 @@ public class HomeController {
 	private UserService userService;
 	
 	@Autowired
-	private ImageService imageService;
-	
+	private OrderService orderService;
 	
 	@Autowired
 	private UserSecurityService userSecurityService;
 	
+	@Autowired
+	private ImageService imageService;
 	
 	@Autowired
 	private UserPaymentService userPaymentService;
 	
 	@Autowired
-	private CartItemService cartItemService;
-	
-	@Autowired
 	private UserShippingService userShippingService;
 	
 	@Autowired
-	private OrderService orderService;
+	private CartItemService cartItemService;
+	
 	
 
 	@RequestMapping("/")
 	public String index() {
 		return "index";
-	}
-
-	@RequestMapping("/login")
-	public String login(Model model) {
-		model.addAttribute("classActiveLogin", true);
-		return "myAccount";
 	}
 	
 	@RequestMapping("/coordinates")
@@ -101,47 +94,43 @@ public class HomeController {
 	public String faq() {
 		return "faq";
 	}
+
+	@RequestMapping("/login")
+	public String login(Model model) {
+		model.addAttribute("classActiveLogin", true);
+		return "myAccount";
+	}
+	
+	
+
+
+	
+	@RequestMapping("/myProfile")
+	public String myProfile(Model model, Principal principal) {
+		User user = userService.findByUsername(principal.getName());
+		model.addAttribute("user", user);
+		model.addAttribute("userPaymentList", user.getUserPaymentList());
+		model.addAttribute("userShippingList", user.getUserShippingList());
+		model.addAttribute("orderList", user.getOrderList());
+		
+		UserShipping userShipping = new UserShipping();
+		model.addAttribute("userShipping", userShipping);
+		
+		model.addAttribute("listOfCreditCards", true);
+		model.addAttribute("listOfShippingAddresses", true);
+		
+		List<String> stateList = USConstants.listOfUSStatesCode;;
+		Collections.sort(stateList);
+		model.addAttribute("stateList", stateList);
+		model.addAttribute("classActiveEdit", true);
+		
+		return "myProfile";
+	}
+	
 	
 
 	
 	
-	@RequestMapping("/listOfShippingAddresses")
-	public String listOfShippingAddresses(
-			Model model, Principal principal, HttpServletRequest request
-			) {
-		User user = userService.findByUsername(principal.getName());
-		model.addAttribute("user", user);
-		model.addAttribute("userPaymentList", user.getUserPaymentList());
-		model.addAttribute("userShippingList", user.getUserShippingList());
-		model.addAttribute("orderList", user.getOrderList());
-		
-		model.addAttribute("listOfCreditCards", true);
-		model.addAttribute("classActiveShipping", true);
-		model.addAttribute("listOfShippingAddresses", true);
-		
-		return "myProfile";
-	}
-	
-	
-	
-	@RequestMapping(value="/setDefaultPayment", method=RequestMethod.POST)
-	public String setDefaultPayment(
-			@ModelAttribute("defaultUserPaymentId") Long defaultPaymentId, Principal principal, Model model
-			) {
-		User user = userService.findByUsername(principal.getName());
-		userService.setUserDefaultPayment(defaultPaymentId, user);
-		
-		model.addAttribute("user", user);
-		model.addAttribute("listOfCreditCards", true);
-		model.addAttribute("classActiveBilling", true);
-		model.addAttribute("listOfShippingAddresses", true);
-		
-		model.addAttribute("userPaymentList", user.getUserPaymentList());
-		model.addAttribute("userShippingList", user.getUserShippingList());
-		model.addAttribute("orderList", user.getOrderList());
-		
-		return "myProfile";
-	}
 	
 	
 	
