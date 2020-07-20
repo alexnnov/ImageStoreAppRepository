@@ -19,6 +19,14 @@ public class Role {
 	@OneToMany(mappedBy = "role", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	private Set<UserRole> userRoles = new HashSet<>();
 
+	public Role() {
+	}
+
+	private Role(int roleId, String name) {
+		this.roleId = roleId;
+		this.name = name;
+	}
+	
 	public int getRoleId() {
 		return roleId;
 	}
@@ -43,5 +51,8 @@ public class Role {
 		this.userRoles = userRoles;
 	}
 	
+	private static final int REGULAR_USER_ROLE_ID = 1;
+	private static final String REGULAR_USER_ROLE_NAME = "ROLE_USER";
 	
+	public static final Role REGULAR_USER_ROLE = new Role(REGULAR_USER_ROLE_ID, REGULAR_USER_ROLE_NAME);
 }

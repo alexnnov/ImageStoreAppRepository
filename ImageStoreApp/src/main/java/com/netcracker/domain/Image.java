@@ -32,8 +32,7 @@ public class Image {
 	private double ourPrice;
 	private boolean active=true;
 	
-	@Column(columnDefinition="text")
-	private String description;
+
 	private int inStockNumber;
 	
 	@Transient
@@ -125,14 +124,7 @@ public class Image {
 	}
 
 
-	public String getDescription() {
-		return description;
-	}
-
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
+	
 
 
 	public int getInStockNumber() {

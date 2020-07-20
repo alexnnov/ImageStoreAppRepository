@@ -18,30 +18,27 @@ public class ListOfShippingAddressesController {
 	
 	@Autowired
 	private UserService userService;
-	
-	
+
 	/**
-	 * processes GET-method request from myProfile template to display list of shipping addresses
+	 * processes GET-method request from myProfile template to display list of
+	 * shipping addresses
 	 * 
 	 * @param model     the input model from the view
-	 * @param principal current Spring Security user  
+	 * @param principal current Spring Security user
 	 * @param request   HTTP-servlet request
-	 * @return          view name to display
+	 * @return view name to display
 	 */
 	@RequestMapping("/listOfShippingAddresses")
-	public String listOfShippingAddresses(
-			Model model, Principal principal, HttpServletRequest request
-			) {
+	public String listOfShippingAddresses(Model model, Principal principal, HttpServletRequest request) {
 		User user = userService.findByUsername(principal.getName());
 		model.addAttribute("user", user);
 		model.addAttribute("userPaymentList", user.getUserPaymentList());
 		model.addAttribute("userShippingList", user.getUserShippingList());
 		model.addAttribute("orderList", user.getOrderList());
-		
 		model.addAttribute("listOfCreditCards", true);
 		model.addAttribute("classActiveShipping", true);
 		model.addAttribute("listOfShippingAddresses", true);
-		
+
 		return "myProfile";
 	}
 

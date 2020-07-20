@@ -27,6 +27,7 @@ public class OrderServiceImpl implements OrderService{
 	@Autowired
 	private CartItemService cartItemService;
 	
+	@Override
 	public synchronized Order createOrder(ShoppingCart shoppingCart,
 			ShippingAddress shippingAddress,
 			BillingAddress billingAddress,
@@ -60,6 +61,7 @@ public class OrderServiceImpl implements OrderService{
 		return order;
 	}
 	
+	@Override
 	public Order findOne(Long id) {
 		return orderRepository.findById(id).orElse(null);
 	}

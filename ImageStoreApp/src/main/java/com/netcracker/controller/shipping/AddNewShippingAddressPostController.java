@@ -18,23 +18,22 @@ public class AddNewShippingAddressPostController {
 	
 	@Autowired
 	private UserService userService;
-	
+
 	/**
-	 * processes request from the myProfile template to add client's new shipping address
-	 *  	
+	 * processes request from the myProfile template to add client's new shipping
+	 * address
+	 * 
 	 * @param userShipping user-filled shipping information from template
 	 * @param principal    current Spring Security user
 	 * @param model        the input model from the view
-	 * @return             view name myProfie to display
+	 * @return view name myProfile to display
 	 */
-	@RequestMapping(value="/addNewShippingAddress", method=RequestMethod.POST)
-	public String addNewShippingAddressPost(
-			@ModelAttribute("userShipping") UserShipping userShipping,
-			Principal principal, Model model
-			){
+	@RequestMapping(value = "/addNewShippingAddress", method = RequestMethod.POST)
+	public String addNewShippingAddressPost(@ModelAttribute("userShipping") UserShipping userShipping,
+			Principal principal, Model model) {
 		User user = userService.findByUsername(principal.getName());
 		userService.updateUserShipping(userShipping, user);
-		
+
 		model.addAttribute("user", user);
 		model.addAttribute("userPaymentList", user.getUserPaymentList());
 		model.addAttribute("userShippingList", user.getUserShippingList());
@@ -42,7 +41,7 @@ public class AddNewShippingAddressPostController {
 		model.addAttribute("classActiveShipping", true);
 		model.addAttribute("listOfCreditCards", true);
 		model.addAttribute("orderList", user.getOrderList());
-		
+
 		return "myProfile";
 	}
 

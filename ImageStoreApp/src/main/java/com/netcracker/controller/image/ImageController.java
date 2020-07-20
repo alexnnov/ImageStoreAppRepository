@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.imagestore.domain.Image;
 import com.imagestore.domain.User;
 import com.imagestore.service.ImageService;
-import com.imagestore.service.OrderService;
 import com.imagestore.service.UserService;
-import com.imagestore.service.impl.UserSecurityService;
-
 
 @Controller
 public class ImageController {

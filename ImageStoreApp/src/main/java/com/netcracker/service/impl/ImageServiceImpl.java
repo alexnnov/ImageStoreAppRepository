@@ -15,24 +15,18 @@ public class ImageServiceImpl  implements ImageService{
 	@Autowired
 	private ImageRepository imageRepository;
 	
+	@Override
 	public List<Image> findAll(){
-		List<Image> imageList = (List<Image>) imageRepository.findAll();
-		List<Image> activeImageList = new ArrayList<>();
-		
-		for (Image image: imageList) {
-			if(image.isActive()) {
-				activeImageList.add(image);
-			}
-		}
-		
-		return activeImageList;
+		return (List<Image>) imageRepository.findAll();
 	}
 	
+	@Override
 	public Image findById(Long id) {
 		return imageRepository.findById(id).orElse(null);
 	
 	}
 	
+	@Override
 	public List<Image> findByCategory(String category){
 		List<Image> imageList = imageRepository.findByCategory(category);
 		
@@ -47,6 +41,7 @@ public class ImageServiceImpl  implements ImageService{
 		return activeImageList;
 	}
 	
+	@Override
 	public List<Image> blurrySearch(String name) {
 		List<Image> imageList = imageRepository.findByNameContaining(name);
 		List<Image> activeImageList = new ArrayList<>();

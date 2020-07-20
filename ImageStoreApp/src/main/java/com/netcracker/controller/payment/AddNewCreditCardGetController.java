@@ -29,32 +29,28 @@ public class AddNewCreditCardGetController {
 	 * @return          view name myProfile to display
 	 */
 	@RequestMapping("/addNewCreditCard")
-	public String addNewCreditCard(
-			Model model, Principal principal
-			){
+	public String addNewCreditCard(Model model, Principal principal) {
 		User user = userService.findByUsername(principal.getName());
 		model.addAttribute("user", user);
-		
+
 		model.addAttribute("addNewCreditCard", true);
 		model.addAttribute("classActiveBilling", true);
-		
+
 		model.addAttribute("listOfShippingAddresses", true);
-		
+
 		UserBilling userBilling = new UserBilling();
 		UserPayment userPayment = new UserPayment();
-		
-		
+
 		model.addAttribute("userBilling", userBilling);
 		model.addAttribute("userPayment", userPayment);
-		
-		List<String> stateList = USConstants.listOfUSStatesCode;;
+
+		List<String> stateList = USConstants.LIST_OF_US_STATES_CODE;
 		Collections.sort(stateList);
 		model.addAttribute("stateList", stateList);
 		model.addAttribute("userPaymentList", user.getUserPaymentList());
 		model.addAttribute("userShippingList", user.getUserShippingList());
 		model.addAttribute("orderList", user.getOrderList());
-		
+
 		return "myProfile";
 	}
-
 }

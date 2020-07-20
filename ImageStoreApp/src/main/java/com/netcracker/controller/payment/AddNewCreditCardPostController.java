@@ -19,24 +19,21 @@ public class AddNewCreditCardPostController {
 	private UserService userService;
 	
 	/**
-	 * processes request from myProfile template for adding new credit card based on user payment and billing information
+	 * processes request from myProfile template for adding new credit card based on
+	 * user payment and billing information
 	 * 
 	 * @param userPayment user-filled payment information from template
-	 * @param userBilling current session user's billing 
-	 * @param principal   current Spring Security user  
+	 * @param userBilling current session user's billing
+	 * @param principal   current Spring Security user
 	 * @param model       the input model from the view
-	 * @return            view name myProfile to display
+	 * @return view name myProfile to display
 	 */
-	
-	@RequestMapping(value="/addNewCreditCard", method=RequestMethod.POST)
-	public String addNewCreditCard(
-			@ModelAttribute("userPayment") UserPayment userPayment,
-			@ModelAttribute("userBilling") UserBilling userBilling,
-			Principal principal, Model model
-			){
+	@RequestMapping(value = "/addNewCreditCard", method = RequestMethod.POST)
+	public String addNewCreditCard(@ModelAttribute("userPayment") UserPayment userPayment,
+			@ModelAttribute("userBilling") UserBilling userBilling, Principal principal, Model model) {
 		User user = userService.findByUsername(principal.getName());
 		userService.updateUserBilling(userBilling, userPayment, user);
-		
+
 		model.addAttribute("user", user);
 		model.addAttribute("userPaymentList", user.getUserPaymentList());
 		model.addAttribute("userBillingList", user.getUserShippingList());
@@ -44,8 +41,7 @@ public class AddNewCreditCardPostController {
 		model.addAttribute("classActiveBilling", true);
 		model.addAttribute("listOfCreditCards", true);
 		model.addAttribute("orderList", user.getOrderList());
-		
+
 		return "myProfile";
 	}
-
 }

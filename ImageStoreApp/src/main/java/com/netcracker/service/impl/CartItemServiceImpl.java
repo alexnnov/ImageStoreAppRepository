@@ -25,10 +25,12 @@ public class CartItemServiceImpl implements CartItemService{
 	@Autowired
 	private ImageToCartItemRepository imageToCartItemRepository;
 	
+	@Override
 	public List<CartItem> findByShoppingCart(ShoppingCart shoppingCart) {
 		return cartItemRepository.findByShoppingCart(shoppingCart);
 	}
 	
+	@Override
 	public CartItem updateCartItem(CartItem cartItem) {
 		BigDecimal bigDecimal = new BigDecimal(cartItem.getImage().getOurPrice()).multiply(new BigDecimal(cartItem.getQty()));
 		
@@ -40,12 +42,12 @@ public class CartItemServiceImpl implements CartItemService{
 		return cartItem;
 	}
 
-	
+	@Override
 	public CartItem addImageToCartItem(Image image, User user, int qty) {
 		List<CartItem> cartItemList = findByShoppingCart(user.getShoppingCart());
 		
 		for (CartItem cartItem : cartItemList) {
-			if(image.getId() == cartItem.getImage().getId()) {
+			if(image.getId().equals(cartItem.getImage().getId())) {
 				cartItem.setQty(cartItem.getQty()+qty);
 				cartItem.setSubtotal(new BigDecimal(image.getOurPrice()).multiply(new BigDecimal(qty)));
 				cartItemRepository.save(cartItem);
@@ -69,19 +71,23 @@ public class CartItemServiceImpl implements CartItemService{
 		return cartItem;
 	}
 	
+	@Override
 	public CartItem findById(Long id) {
 		return cartItemRepository.findById(id).orElse(null);
 	}
 	
+	@Override
 	public void removeCartItem(CartItem cartItem) {
 		imageToCartItemRepository.deleteByCartItem(cartItem);
 		cartItemRepository.delete(cartItem);
 	}
 	
+	@Override
 	public CartItem save(CartItem cartItem) {
 		return cartItemRepository.save(cartItem);
 	}
 	
+	@Override
 	public List<CartItem> findByOrder(Order order) {
 		return cartItemRepository.findByOrder(order);
 	}

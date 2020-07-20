@@ -66,7 +66,6 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	@Override
-	
 	public User createUser(User user, Set<UserRole> userRoles){
 		User localUser = userRepository.findByUsername(user.getUsername());
 		
@@ -125,7 +124,7 @@ public class UserServiceImpl implements UserService{
 		List<UserPayment> userPaymentList = (List<UserPayment>) userPaymentRepository.findAll();
 		
 		for (UserPayment userPayment : userPaymentList) {
-			if(userPayment.getId() == userPaymentId) {
+			if(userPayment.getId().equals(userPaymentId)) {
 				userPayment.setDefaultPayment(true);
 				userPaymentRepository.save(userPayment);
 			} else {
@@ -140,7 +139,7 @@ public class UserServiceImpl implements UserService{
 		List<UserShipping> userShippingList = (List<UserShipping>) userShippingRepository.findAll();
 		
 		for (UserShipping userShipping : userShippingList) {
-			if(userShipping.getId() == userShippingId) {
+			if(userShipping.getId().equals(userShippingId)) {
 				userShipping.setUserShippingDefault(true);
 				userShippingRepository.save(userShipping);
 			} else {

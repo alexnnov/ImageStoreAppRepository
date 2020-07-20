@@ -61,15 +61,18 @@ public class CheckoutPostController {
 	 */
 	@RequestMapping(value = "/checkout", method = RequestMethod.POST)
 	public String checkoutPost(@ModelAttribute("shippingAddress") ShippingAddress shippingAddress,
-			@ModelAttribute("billingAddress") BillingAddress billingAddress, @ModelAttribute("payment") Payment payment,
+			@ModelAttribute("billingAddress") BillingAddress billingAddress, 
+			@ModelAttribute("payment") Payment payment,
 			@ModelAttribute("billingSameAsShipping") String billingSameAsShipping,
-			@ModelAttribute("shippingMethod") String shippingMethod, Principal principal, Model model) {
-		ShoppingCart shoppingCart = userService.findByUsername(principal.getName()).getShoppingCart();
+			@ModelAttribute("shippingMethod") String shippingMethod, 
+			Principal principal, 
+			Model model) {
+		final ShoppingCart shoppingCart = userService.findByUsername(principal.getName()).getShoppingCart();
 
-		List<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
+		final List<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
 		model.addAttribute("cartItemList", cartItemList);
 
-		if (billingSameAsShipping.equals("true")) {
+		if ("true".equals(billingSameAsShipping)) {
 			billingAddress.setBillingAddressName(shippingAddress.getShippingAddressName());
 			billingAddress.setBillingAddressStreet1(shippingAddress.getShippingAddressStreet1());
 			billingAddress.setBillingAddressStreet2(shippingAddress.getShippingAddressStreet2());
@@ -79,15 +82,21 @@ public class CheckoutPostController {
 			billingAddress.setBillingAddressZipcode(shippingAddress.getShippingAddressZipcode());
 		}
 
-		if (shippingAddress.getShippingAddressStreet1().isEmpty() || shippingAddress.getShippingAddressCity().isEmpty()
+		if (shippingAddress.getShippingAddressStreet1().isEmpty() 
+				|| shippingAddress.getShippingAddressCity().isEmpty()
 				|| shippingAddress.getShippingAddressState().isEmpty()
 				|| shippingAddress.getShippingAddressName().isEmpty()
-				|| shippingAddress.getShippingAddressZipcode().isEmpty() || payment.getCardNumber().isEmpty()
-				|| payment.getCvc() == 0 || billingAddress.getBillingAddressStreet1().isEmpty()
-				|| billingAddress.getBillingAddressCity().isEmpty() || billingAddress.getBillingAddressState().isEmpty()
+				|| shippingAddress.getShippingAddressZipcode().isEmpty() 
+				|| payment.getCardNumber().isEmpty()
+				|| payment.getCvc() == 0 
+				|| billingAddress.getBillingAddressStreet1().isEmpty()
+				|| billingAddress.getBillingAddressCity().isEmpty() 
+				|| billingAddress.getBillingAddressState().isEmpty()
 				|| billingAddress.getBillingAddressName().isEmpty()
 				|| billingAddress.getBillingAddressZipcode().isEmpty())
+			{
 			return "redirect:/checkout?id=" + shoppingCart.getId() + "&missingRequiredField=true";
+			}
 		
 		User user = userService.findByUsername(principal.getName());
 		
@@ -100,7 +109,7 @@ public class CheckoutPostController {
 		LocalDate today = LocalDate.now();
 		LocalDate estimatedDeliveryDate;
 		
-		if (shippingMethod.equals("groundShipping")) {
+		if ("groundShipping".contentEquals(shippingMethod)) {
 			estimatedDeliveryDate = today.plusDays(5);
 		} else {
 			estimatedDeliveryDate = today.plusDays(3);

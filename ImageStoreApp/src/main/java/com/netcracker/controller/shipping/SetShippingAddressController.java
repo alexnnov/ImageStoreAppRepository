@@ -17,6 +17,7 @@ import com.imagestore.domain.ShippingAddress;
 import com.imagestore.domain.User;
 import com.imagestore.domain.UserPayment;
 import com.imagestore.domain.UserShipping;
+import com.imagestore.exceptions.UserNotFoundException;
 import com.imagestore.service.CartItemService;
 import com.imagestore.service.ShippingAddressService;
 import com.imagestore.service.UserService;
@@ -29,75 +30,70 @@ public class SetShippingAddressController {
 	private ShippingAddress shippingAddress = new ShippingAddress();
 	private BillingAddress billingAddress = new BillingAddress();
 	private Payment payment = new Payment();
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private UserShippingService userShippingService;
-		
+
 	@Autowired
 	private CartItemService cartItemService;
-	
+
 	@Autowired
 	private ShippingAddressService shippingAddressService;
+
 	/**
-	 * processes GET-method request from checkout template.
-	 * Establishes shipping address for current session user.
+	 * processes GET-method request from checkout template. Set shipping
+	 * address for current session user.
 	 * 
 	 * @param userShippingId shipping Id for current user
 	 * @param principal      Spring Security user
 	 * @param model          the input model from the view
-	 * @return               view name checkout to display
+	 * @return view name checkout to display
 	 */
 	@RequestMapping("/setShippingAddress")
-	public String setShippingAddress(
-			@RequestParam("userShippingId") Long userShippingId,
-			Principal principal, Model model
-			) {
+	public String setShippingAddress(@RequestParam("userShippingId") Long userShippingId, Principal principal,
+			Model model) throws UserNotFoundException {
 		User user = userService.findByUsername(principal.getName());
 		UserShipping userShipping = userShippingService.findById(userShippingId);
-		
-		if(userShipping.getUser().getId() != user.getId()) {
-			return "badRequestPage";
-		} else {
+
+		if (userShipping.getUser().getId().equals(user.getId())) {
 			shippingAddressService.setByUserShipping(userShipping, shippingAddress);
-			
+
 			List<CartItem> cartItemList = cartItemService.findByShoppingCart(user.getShoppingCart());
-			
-			
-			
+
 			model.addAttribute("shippingAddress", shippingAddress);
 			model.addAttribute("payment", payment);
 			model.addAttribute("billingAddress", billingAddress);
 			model.addAttribute("cartItemList", cartItemList);
 			model.addAttribute("shoppingCart", user.getShoppingCart());
-			
-			List<String> stateList = USConstants.listOfUSStatesCode;
+
+			List<String> stateList = USConstants.LIST_OF_US_STATES_CODE;
 			Collections.sort(stateList);
 			model.addAttribute("stateList", stateList);
-			
+
 			List<UserShipping> userShippingList = user.getUserShippingList();
 			List<UserPayment> userPaymentList = user.getUserPaymentList();
-			
+
 			model.addAttribute("userShippingList", userShippingList);
 			model.addAttribute("userPaymentList", userPaymentList);
-			
+
 			model.addAttribute("shippingAddress", shippingAddress);
-			
+
 			model.addAttribute("classActiveShipping", true);
-			
-			if (userPaymentList.size() == 0) {
+
+			if (userPaymentList.isEmpty()) {
 				model.addAttribute("emptyPaymentList", true);
 			} else {
 				model.addAttribute("emptyPaymentList", false);
 			}
-			
-			
+
 			model.addAttribute("emptyShippingList", false);
-			
-			
+
 			return "checkout";
+		} else {
+			throw new UserNotFoundException();
 		}
 	}
 	

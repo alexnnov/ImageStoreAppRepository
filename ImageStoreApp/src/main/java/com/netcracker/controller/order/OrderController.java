@@ -14,6 +14,7 @@ import com.imagestore.domain.CartItem;
 import com.imagestore.domain.Order;
 import com.imagestore.domain.User;
 import com.imagestore.domain.UserShipping;
+import com.imagestore.exceptions.UserNotFoundException;
 import com.imagestore.service.CartItemService;
 import com.imagestore.service.OrderService;
 import com.imagestore.service.UserService;
@@ -41,38 +42,48 @@ public class OrderController {
 	 * @return          view name myProfile to display
 	 */
 	@RequestMapping("/orderDetail")
-	public String orderDetail(
-			@RequestParam("id") Long orderId,
-			Principal principal, Model model
-			){
+	public String orderDetail(@RequestParam("id") Long orderId, Principal principal, Model model) throws UserNotFoundException{
 		User user = userService.findByUsername(principal.getName());
 		Order order = orderService.findOne(orderId);
+
+		User orderUser = order.getUser();
 		
-		if(order.getUser().getId()!=user.getId()) {
-			return "badRequestPage";
-		} else {
+		if (orderUser == null) {
+			throw new UserNotFoundException();
+		}
+		
+		if (user == null) {
+			throw new UserNotFoundException();
+		}
+		
+		Long orderUserId = orderUser.getId();
+		Long userId = user.getId();
+		
+		if (orderUserId != null && userId != null && orderUserId.equals(userId)) {
 			List<CartItem> cartItemList = cartItemService.findByOrder(order);
 			model.addAttribute("cartItemList", cartItemList);
 			model.addAttribute("user", user);
 			model.addAttribute("order", order);
-			
+
 			model.addAttribute("userPaymentList", user.getUserPaymentList());
 			model.addAttribute("userShippingList", user.getUserShippingList());
 			model.addAttribute("orderList", user.getOrderList());
-			
+
 			UserShipping userShipping = new UserShipping();
 			model.addAttribute("userShipping", userShipping);
-			
-			List<String> stateList = USConstants.listOfUSStatesCode;;
+
+			List<String> stateList = USConstants.LIST_OF_US_STATES_CODE;
 			Collections.sort(stateList);
 			model.addAttribute("stateList", stateList);
-			
+
 			model.addAttribute("listOfShippingAddresses", true);
 			model.addAttribute("classActiveOrders", true);
 			model.addAttribute("listOfCreditCards", true);
 			model.addAttribute("displayOrderDetail", true);
-			
+
 			return "myProfile";
+		} else {
+			throw new UserNotFoundException();
 		}
 	}
 
